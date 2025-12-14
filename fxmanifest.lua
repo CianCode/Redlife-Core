@@ -10,8 +10,16 @@
 ---@author CianCode
 
 resource_type 'gametype' { name = 'redlife' }
+
 fx_version 'adamant'
 game 'gta5'
+
+files {
+    'src/web/dist/index.html',
+    'src/web/dist/assets/index-4eoCdr-l.css',
+    'src/web/dist/assets/index-CtR59rOR.js',
+    'src/web/dist/vite.svg'
+}
 
 description "Main system of Redlife RP"
 author "CianCode"
