@@ -114,3 +114,28 @@ client_scripts {
 --]]
 
 loadscreen "src/web/dist/index.html"
+
+
+shared_scripts {
+    -- Config
+    "config/global.lua",
+    -- Enum
+    "src/class/enum/*.lua",
+    -- Init
+    "src/core/shared/utils/*.lua",
+    "src/core/shared/main.lua",
+}
+
+client_scripts {
+    -- Init
+    "src/core/client/utils/*.lua",
+    "src/core/client/main.lua",
+}
+
+server_scripts {
+    -- Init
+    "src/core/server/utils/*.lua",
+    "src/core/server/main.lua",
+    -- Modules
+    "src/components/**/server/*.lua",
+}
