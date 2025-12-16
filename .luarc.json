@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "runtime.version": "Lua 5.4",
+  "runtime.nonstandardSymbol": ["+=", "-=", "*=", "/="],
+  "workspace.checkThirdParty": false,
+  "diagnostics.libraryFiles": "Disable",
+  "runtime.builtin": {
+    "basic": "default",
+    "io": "disable",
+    "os": "disable"
+  },
+  "workspace.library": [
+    ".vscode/fivem-lls-addon/library"
+  ]
+}
