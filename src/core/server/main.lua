@@ -10,12 +10,12 @@
 ---@author CianCode
 
 _RedLife.toClient = function(event, targetSrc, ...)
-    _RedLife(_RedLife.format(event), targetSrc, ...)
+    TriggerClientEvent(_RedLife.format(event), targetSrc, ...)
     _RedLife.log(("Envoie d'un event au client (^3%i^7) ^6>^1 %s"):format(targetSrc, event))
 end
 
 _RedLife.toClients = function(event, ...)
-    _RedLife(_RedLife.format(event), -1, ...)
+    TriggerClientEvent(_RedLife.format(event), -1, ...)
     _RedLife.log(("Envoie d'un event aux clients ^6>^1 %s"):format(event))
 end
 

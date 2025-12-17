@@ -9,7 +9,7 @@
 --]]
 ---@author CianCode
 
-_RedLife_Utils.loading_show = function(loadingText, spinnerType)
+_RedClient_Utils.loading_show = function(loadingText, spinnerType)
     if IsLoadingPromptBeingDisplayed() then
         RemoveLoadingPrompt()
     end
@@ -22,7 +22,7 @@ _RedLife_Utils.loading_show = function(loadingText, spinnerType)
     EndTextCommandBusyString(spinnerType)
 end
 
-_RedLife_Utils.loading_hide = function()
+_RedClient_Utils.loading_hide = function()
     if IsLoadingPromptBeingDisplayed() then
         RemoveLoadingPrompt()
     end

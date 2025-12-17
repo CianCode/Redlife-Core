@@ -9,4 +9,4 @@
 --]]
 ---@author CianCode
 
-_RedLife_Utils = {}
+_RedClient_Utils = {}

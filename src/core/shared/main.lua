@@ -48,12 +48,21 @@ _RedLife.onReceive = function(event, handler)
     if (not (isEventRegistred(event))) then
         registerEvent(event)
     end
-    --AddEventHandler(event, handler)
     AddEventHandler(event, function(...)
         local _src, isServer = source, (GetGameName() == "fxserver")
-        _RedLife.log(isServer and ("Réception d'un event client (^3%s^7) ^6>^2 %s"):format(_src, baseEvent) or (("Réception d'un event serveur ^6>^2 %s"):format(baseEvent)))
-        handler(...)
+        _RedLife.log(isServer and ("Réception d'un event client (^3%s^7) ^6>^2 %s"):format(_src, baseEvent) or
+            (("Réception d'un event serveur ^6>^2 %s"):format(baseEvent)))
+        if isServer then
+            handler(_src, ...)
+        else
+            handler(...)
+        end
     end)
+end
+
+_RedLife.onReceiveWithoutNet = function(event, handler)
+    event = _RedLife.format(event)
+    AddEventHandler(event, handler)
 end
 
 _RedLife.hash = function(string)

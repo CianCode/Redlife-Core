@@ -138,6 +138,8 @@ client_scripts {
     -- Init
     "src/core/client/utils/*.lua",
     "src/core/client/main.lua",
+    -- Addons
+    "src/addons/**/client/*.lua",
 }
 
 server_scripts {
@@ -146,4 +148,6 @@ server_scripts {
     "src/core/server/main.lua",
     -- Modules
     "src/components/**/server/*.lua",
+    -- Addons
+    "src/addons/**/server/*.lua",
 }
