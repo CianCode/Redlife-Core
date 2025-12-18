@@ -24,13 +24,13 @@ end
 
 _RedLife.setIsWaitingForServer = function(newState)
     isWaitingForServer = newState
-    if(isWaitingForServer) then
+    if (isWaitingForServer) then
         CreateThread(function()
-            _RedLife_Utils.loading_show("En attente du serveur", 4)
+            _RedClient_Utils.loading_show("En attente du serveur", 4)
             while (isWaitingForServer) do
                 Wait(1)
             end
-            _RedLife_Utils.loading_hide()
+            _RedClient_Utils.loading_hide()
         end)
     end
 end

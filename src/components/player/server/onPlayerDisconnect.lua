@@ -19,7 +19,6 @@ _RedLife.onReceiveWithoutNetExposed("playerDropped", function()
     print(_src)
     local player = _RedServer_Players.get(_src)
     print(json.encode(player))
-    player.job._job:playerLeftJob(_src)
     player:saveData()
     player:savePosition()
     if (_RedServer_Players.exists(_src)) then

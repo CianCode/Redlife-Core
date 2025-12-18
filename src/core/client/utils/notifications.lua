@@ -16,11 +16,11 @@ _RedClient_Utils.notifications_show = function(message)
 end
 
 _RedClient_Utils.notifications_showHelp = function(message)
-    AddTextEntry("FlashLandHelp", message)
-    DisplayHelpTextThisFrame("FlashLandHelp", false)
+    AddTextEntry("RedLifeHelp", message)
+    DisplayHelpTextThisFrame("RedLifeHelp", false)
 end
 
-_RedClient_Utils.notifications_showAdvanced = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief,
+_RedClient_Utils.notifications_showAdvanced = function(sender, subject, msg, textureDict, iconType, red, saveToBrief,
                                                        hudColorIndex)
     if saveToBrief == nil then
         saveToBrief = true
@@ -31,7 +31,7 @@ _RedClient_Utils.notifications_showAdvanced = function(sender, subject, msg, tex
         ThefeedNextPostBackgroundColor(hudColorIndex)
     end
     EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
-    EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
+    EndTextCommandThefeedPostTicker(red or false, saveToBrief)
 end
 
 _RedLife.onReceive("utils:notifications_showAdvanced", function(sender, subject, msg, textureDict, iconType)

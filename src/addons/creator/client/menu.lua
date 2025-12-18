@@ -113,7 +113,7 @@ _RedLife.onReceive("creator:initMenu", function()
                     RageUI.Button("Customisation du personnage", "Vos informations personnelles", { RightLabel = "→→" },
                         true, {}, menus[3])
                     RageUI.Button("Valider et commencer",
-                        "Confirmez vos informations et commencez l'aventure ~r~FlashLand",
+                        "Confirmez vos informations et commencez l'aventure ~r~RedLife",
                         { Color = { BackgroundColor = { 0, 255, 0, 25 } } }, validateInfos(), {
                             onSelected = function()
                                 _RedLife.setIsWaitingForServer(true)

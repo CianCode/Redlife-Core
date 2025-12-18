@@ -125,24 +125,52 @@ loadscreen "src/web/dist/index.html"
 
 
 shared_scripts {
+    -- Static
+    "static/**/*.lua",
     -- Config
     "config/global.lua",
     -- Enum
     "src/class/enum/*.lua",
+    -- Objects
+    "src/class/type/shared/*.lua",
     -- Init
     "src/core/shared/utils/*.lua",
     "src/core/shared/main.lua",
+    -- Modules
+    "src/components/**/shared/*.lua",
+    -- Addons
+    "src/addons/**/shared/*.lua",
+    -- Dev
+    "src/dev/shared.lua",
 }
 
 client_scripts {
+    -- Config
+    "config/client.lua",
+    -- Objects
+    "src/class/type/client/*.lua",
+    -- Web
+    "src/web/core/*.lua",
     -- Init
     "src/core/client/utils/*.lua",
     "src/core/client/main.lua",
+    -- Modules
+    "src/components/**/client/*.lua",
     -- Addons
     "src/addons/**/client/*.lua",
+    -- Jobs
+    "src/jobs/**/client/*.lua",
+    -- Dev
+    "src/dev/client.lua",
 }
 
 server_scripts {
+    -- Webhooks
+    "config/webhook.lua",
+    -- Config
+    "config/server.lua",
+    -- Objects
+    "src/class/type/server/*.lua",
     -- Init
     "src/core/server/utils/*.lua",
     "src/core/server/main.lua",
@@ -150,4 +178,8 @@ server_scripts {
     "src/components/**/server/*.lua",
     -- Addons
     "src/addons/**/server/*.lua",
+    -- Jobs
+    "src/jobs/**/server/*.lua",
+    -- Dev
+    "src/dev/server.lua",
 }

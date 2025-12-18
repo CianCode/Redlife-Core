@@ -10,7 +10,7 @@
 ---@author CianCode
 
 ---@class _LightPlayer
----@field public flashId number
+---@field public redId number
 ---@field public identifier string
 ---@field public identity table
 ---@field public cash number
@@ -19,7 +19,6 @@
 ---@field public selectedOutfit number
 ---@field public accessories table
 ---@field public sId number
----@field public inventory _LightInventory
 ---@field public name string
 ---@field public rpName string
 ---@field public job table
@@ -27,10 +26,10 @@ _LightPlayer = {}
 _LightPlayer.__index = _LightPlayer
 
 setmetatable(_LightPlayer, {
-    __call = function(_, sId, flashId, identifier, rank, identity, cash, skin, outfits, selectedOutfit, accessories,
-                      inventory, loadout, name, rpName, job)
+    __call = function(_, sId, redId, identifier, rank, identity, cash, skin, outfits, selectedOutfit, accessories, name,
+                      rpName, job)
         local self = setmetatable({}, _LightPlayer)
-        self.flashId = flashId
+        self.redId = redId
         self.identifier = identifier
         self.identity = identity
         self.cash = cash
@@ -39,7 +38,6 @@ setmetatable(_LightPlayer, {
         self.selectedOutfit = selectedOutfit
         self.accessories = accessories
         self.sId = sId
-        self.inventory = inventory
         self.name = name
         self.rpName = rpName
         self.job = job

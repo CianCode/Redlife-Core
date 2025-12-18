@@ -25,8 +25,8 @@ end
 
 _RedClient_RichPresence.requestVersion = function()
     _RedLife.onReceive("richpresence:cbVersion", function(version)
-        SetDiscordRichPresenceAssetSmall("flashguy")
-        SetDiscordRichPresenceAssetSmallText(("FlashLand [Version %s]"):format(version))
+        SetDiscordRichPresenceAssetSmall("redguy")
+        SetDiscordRichPresenceAssetSmallText(("RedLife [Version %s]"):format(version))
     end)
     _RedLife.toServer("richpresence:getVersion")
 end

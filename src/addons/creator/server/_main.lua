@@ -9,13 +9,12 @@
 --]]
 ---@author CianCode
 
-_RedLife.onReceive("creator:sendData", function(creatorData)
-    local _src = source
+_RedLife.onReceive("creator:sendData", function(_src, creatorData)
     local skin, identity, outfit = creatorData.skin, creatorData.identity, creatorData.outfit
     _RedServer_Players.register(_src, creatorData)
 end)
 
-_RedLife.onReceive("creator:playerRegistered", function(_src)
+_RedLife.onReceive("creator:playerRegistered", function(_, _src)
     _RedServer_Instances.setOnPublicInstance(_src)
     _RedLife.toClient("creator:characterDone", _src, _ConfigServer.Start.startPosition)
 end)

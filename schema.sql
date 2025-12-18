@@ -6,7 +6,7 @@ create TABLE `red_item`
     `item_weight`      double      NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-insert into `flash_item` (`item_id`, `item_label`, `item_description`, `item_weight`)
+insert into `red_item` (`item_id`, `item_label`, `item_description`, `item_weight`)
 VALUES ('pain', 'Pain', 'Pain', 0.2),
        ('water', 'Eau', 'Eau', 0.2);
 
@@ -61,7 +61,3 @@ ALTER TABLE `red_players`
 
 ALTER TABLE `red_players_positions`
     MODIFY `redId` int (11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
-ALTER TABLE `red_ranks_permissions`
-    MODIFY `id` int (50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
-COMMIT;

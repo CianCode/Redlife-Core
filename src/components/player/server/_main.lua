@@ -25,7 +25,7 @@ end
 
 _RedServer_Players.existsInDb = function(_src)
     local license = _RedServer_Utils.identifiers_get(_src, "steam")
-    _RedServer_Database.query("SELECT * FROM flash_players WHERE identifier = @identifier", { ["identifier"] = license },
+    _RedServer_Database.query("SELECT * FROM red_players WHERE identifier = @identifier", { ["identifier"] = license },
         function(result)
             return (result[1] ~= nil)
         end)
@@ -55,7 +55,7 @@ end
 
 _RedServer_Players.loadData = function(_src, cb)
     local identifier = _RedServer_Utils.identifiers_get(_src, "steam")
-    _RedServer_Database.query("SELECT * FROM flash_players WHERE identifier = @identifier",
+    _RedServer_Database.query("SELECT * FROM red_players WHERE identifier = @identifier",
         { ["identifier"] = identifier }, function(result)
             cb(result[1])
         end)

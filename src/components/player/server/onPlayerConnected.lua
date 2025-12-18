@@ -13,7 +13,7 @@
 _RedLife.onReceiveWithoutNet("players:newLoadedPlayer", function(_src, data)
     _RedLife.log(("Le joueur ^5%s^7 s'est ^2connecté"):format(GetPlayerName(_src)))
     ---@param player _Player
-    local player = _Player(_src, data.flashId, data.identifier, data.rankId, json.decode(data.identity), data.cash,
+    local player = _Player(_src, data.redId, data.identifier, json.decode(data.identity), data.cash,
         json.decode(data.skin), json.decode(data.outfits), data.selectedOutfit, json.decode(data.accessories))
     _RedServer_Players.add(player)
     player:getDbPosition(function(position)

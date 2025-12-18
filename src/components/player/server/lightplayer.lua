@@ -13,5 +13,5 @@
 _RedServer_Players.getLightPlayer = function(_src)
     ---@type _Player
     local player = _RedServer_Players.get(_src)
-    return (_LightPlayer(player.sId, player.flashId, player.identifier, player.identity, player.cash, player.skin, player.outfits, player.selectedOutfit, player.accessories, player.name, player.rpName))
+    return (_LightPlayer(player.sId, player.redId, player.identifier, player.identity, player.cash, player.skin, player.outfits, player.selectedOutfit, player.accessories, player.name, player.rpName))
 end

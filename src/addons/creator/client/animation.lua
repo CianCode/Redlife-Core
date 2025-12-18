@@ -15,7 +15,7 @@ _RedLife.onReceiveWithoutNet("creator:playAnimation", function(spawn)
     RenderScriptCams(0, 0, 0, 0, 0)
     local animation = true
 
-    -- TODO -> add sprite _FlashClient_Utils.memory_loadDict("flashland")
+    -- TODO -> add sprite _RedClient_Utils.memory_loadDict("redlife")
 
     SwitchOutPlayer(PlayerPedId(), 0, 1)
     SetTimeout(500, function()
