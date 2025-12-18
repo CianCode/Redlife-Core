@@ -1,0 +1,270 @@
+---@diagnostic disable: missing-parameter
+--[[
+  This file is part of Redlife.
+  Created at 18/12/2025 00:10
+
+  Copyright (c) Redlife - All Rights Reserved
+
+  Unauthorized using, copying, modifying and/or distributing of this file,
+  via any medium is strictly prohibited. This code is confidential.
+--]]
+---@author CianCode
+
+local builder = {
+    identity = {
+        firstname = nil,
+        lastname = nil,
+        age = nil
+    },
+
+    skin = {},
+
+    outfit = _ConfigClient.Creator.defaultOutFits[1].values[0]
+}
+
+local menuOpened = false
+
+local function validateInfos()
+    return (builder.identity.firstname ~= nil and builder.identity.lastname ~= nil and builder.identity.age ~= nil and tonumber(builder.identity.age) ~= nil and builder.identity.age >= 18 and builder.identity.age <= 99)
+end
+
+local function deleteMenus()
+    -- TODO -> Delete menus
+end
+
+local function createMenus()
+    local title, desc = "CUSTOMISATION", "Créez votre personnage"
+    local main = RageUI.CreateMenu(title, desc, nil, nil, "root_cause", "black_red")
+    main.Closable = false
+    local identity = RageUI.CreateSubMenu(main, title, desc, nil, nil, "root_cause", "black_red")
+    local character = RageUI.CreateSubMenu(main, title, desc, nil, nil, "root_cause", "black_red")
+    local character_sex = RageUI.CreateSubMenu(character, title, desc, nil, nil, "root_cause", "black_red")
+    local character_component = RageUI.CreateSubMenu(character, title, desc, nil, nil, "root_cause", "black_red")
+    character_component.Closed = function()
+        for _, component in pairs(_ConfigClient.Skin) do
+            _RedClient_SkinChanger.applySkin({ [component.id] = builder.skin[component.id] })
+            if (component.sub ~= nil) then
+                _RedClient_SkinChanger.applySkin({ [component.sub] = builder.skin[component.sub] })
+            end
+        end
+        ClearPedProp(PlayerPedId(), 1)
+    end
+    local character_component_variation = RageUI.CreateSubMenu(character_component, title, desc, nil, nil, "root_cause",
+        "black_red")
+    character_component_variation.Closed = function()
+        for _, component in pairs(_ConfigClient.Skin) do
+            _RedClient_SkinChanger.applySkin({ [component.id] = builder.skin[component.id] })
+            if (component.sub ~= nil) then
+                _RedClient_SkinChanger.applySkin({ [component.sub] = builder.skin[component.sub] })
+            end
+        end
+        ClearPedProp(PlayerPedId(), 1)
+    end
+    local character_outfit = RageUI.CreateSubMenu(character, title, desc, nil, nil, "root_cause", "black_red")
+    return ({ main, identity, character, character_sex, character_component, character_component_variation, character_outfit })
+end
+
+local function applySex(currentSex, sexId, selectedOutfit)
+    if (currentSex == sexId) then
+        return
+    end
+    builder.skin["sex"] = sexId
+    local model = (sexId == 0 and "mp_m_freemode_01" or "mp_f_freemode_01")
+    _RedClient_Utils.memory_load(model)
+    SetPlayerModel(PlayerId(), GetHashKey(model))
+    _RedClient_SkinChanger.setAllToDefault()
+    for _, component in pairs(_ConfigClient.Skin) do
+        builder.skin[component.id] = 0
+        if (component.sub ~= nil) then
+            builder.skin[component.sub] = 0
+        end
+    end
+    _RedClient_SkinChanger.setCharacterValueWithoutChange("sex", sexId)
+    _RedClient_SkinChanger.applySkin(_ConfigClient.Creator.defaultOutFits[selectedOutfit].values[sexId])
+    _RedClient_Utils.ped_scenario(PlayerPedId(), "WORLD_HUMAN_GUARD_STAND_CLUBHOUSE", false)
+    ClearPedProp(PlayerPedId(), 1)
+end
+
+_RedLife.onReceive("creator:initMenu", function()
+    _RedClient_Menu.tryOpenMenu(function()
+        menuOpened = true
+        _RedLife.onReceive("creator:characterDone", function(spawn)
+            menuOpened = false
+            _RedLife.toInternal("creator:playAnimation", spawn)
+        end)
+        local selectedComponent, selectedComponentMax, selectedComponentData, selectedOutfit = 0, 0, {}, 1
+        local menus = createMenus()
+        _RedClient_SkinChanger.setAllToDefault()
+        for _, component in pairs(_ConfigClient.Skin) do
+            builder.skin[component.id] = 0
+            if (component.sub ~= nil) then
+                builder.skin[component.sub] = 0
+            end
+        end
+        builder.skin["sex"] = 0
+        _RedClient_SkinChanger.applySkin(_ConfigClient.Creator.defaultOutFits[selectedOutfit].values[0])
+        RageUI.Visible(menus[1], true)
+        CreateThread(function()
+            while (menuOpened) do
+                Wait(0)
+                RageUI.IsVisible(menus[1], function()
+                    RageUI.Button("Customisation de l'identité", "Vos informations personnelles", { RightLabel = "→→" },
+                        true, {}, menus[2])
+                    RageUI.Button("Customisation du personnage", "Vos informations personnelles", { RightLabel = "→→" },
+                        true, {}, menus[3])
+                    RageUI.Button("Valider et commencer",
+                        "Confirmez vos informations et commencez l'aventure ~r~FlashLand",
+                        { Color = { BackgroundColor = { 0, 255, 0, 25 } } }, validateInfos(), {
+                            onSelected = function()
+                                _RedLife.setIsWaitingForServer(true)
+                                _RedLife.toServer("creator:sendData", builder)
+                            end
+                        })
+                end)
+                RageUI.IsVisible(menus[2], function()
+                    RageUI.Button(
+                        ("Prénom: %s"):format(_RedClient_Utils.menu_label_valueOrVoid(builder.identity.firstname)), nil,
+                        { RightLabel = _RedClient_Utils.menu_label_change() }, true, {
+                            onSelected = function()
+                                local input = _RedClient_Utils.input_showBox("Prénom:", "", 30, false)
+                                if (input ~= nil) then
+                                    local match = _RedClient_Utils.regex_name(input)
+                                    if (not (match)) then
+                                        _RedClient_Utils.notifications_template_error(
+                                            "Ce prénom est incorrect. Assurez vous qu'il commence par une ~y~majuscule~s~.")
+                                    else
+                                        builder.identity.firstname = input
+                                        _RedClient_Utils.notifications_template_success("Prénom enregistré")
+                                    end
+                                end
+                            end
+                        })
+                    RageUI.Button(("Nom: %s"):format(_RedClient_Utils.menu_label_valueOrVoid(builder.identity.lastname)),
+                        nil, { RightLabel = _RedClient_Utils.menu_label_change() }, true, {
+                            onSelected = function()
+                                local input = _RedClient_Utils.input_showBox("Nom:", "", 30, false)
+                                if (input ~= nil) then
+                                    local match = _RedClient_Utils.regex_name(input)
+                                    if (not (match)) then
+                                        _RedClient_Utils.notifications_template_error(
+                                            "Ce nom est incorrect. Assurez vous qu'il commence par une ~y~majuscule")
+                                    else
+                                        builder.identity.lastname = input
+                                        _RedClient_Utils.notifications_template_success("Prénom enregistré")
+                                    end
+                                end
+                            end
+                        })
+                    RageUI.Button(("Âge: %s"):format(_RedClient_Utils.menu_label_valueOrVoid(builder.identity.age)), nil,
+                        { RightLabel = _RedClient_Utils.menu_label_change() }, true, {
+                            onSelected = function()
+                                local input = _RedClient_Utils.input_showBox("Âge:", "", 2, true)
+                                if (input ~= nil and tonumber(input) ~= nil) then
+                                    input = tonumber(input)
+                                    if (input < 18 or input > 99) then
+                                        _RedClient_Utils.notifications_template_error(
+                                            "Vous êtes trop jeune ou trop vieux ! Veuillez réessayer")
+                                    else
+                                        builder.identity.age = input
+                                        _RedClient_Utils.notifications_template_success("Âge enregistré")
+                                    end
+                                end
+                            end
+                        })
+                end)
+                RageUI.IsVisible(menus[3], function()
+                    RageUI.Button("Sélection du sexe", nil, { RightLabel = "→→" }, true, {}, menus[4])
+                    RageUI.Button("Sélection de la tenue", nil, { RightLabel = "→→" }, true, {}, menus[7])
+                    RageUI.Line()
+                    for _, component in pairs(_ConfigClient.Skin) do
+                        RageUI.Button(("Customisation: ~y~%s"):format(component.label), nil, { RightLabel = "→" }, true,
+                            {
+                                onSelected = function()
+                                    selectedComponentData = component
+                                    selectedComponent = component.id
+                                    selectedComponentMax = tonumber(_RedClient_SkinChanger.getMaxValues()[component.id])
+                                    for k, v in pairs(_ConfigClient.Skin) do
+                                        _RedClient_SkinChanger.setCharacterValueWithoutChange(v.id, builder.skin[v.id])
+                                    end
+                                end
+                            }, menus[5])
+                    end
+                end)
+                RageUI.IsVisible(menus[4], function()
+                    local sex = _RedClient_SkinChanger.getCharacter()["sex"]
+                    RageUI.Button(("%sHomme"):format(_RedClient_Utils.menu_display_greenIfTrue(sex == 0)), nil,
+                        { RightLabel = _RedClient_Utils.menu_label_select() }, true, {
+                            onSelected = function()
+                                applySex(sex, 0, selectedOutfit)
+                            end
+                        })
+                    RageUI.Button(("%sFemme"):format(_RedClient_Utils.menu_display_greenIfTrue(sex == 1)), nil,
+                        { RightLabel = _RedClient_Utils.menu_label_select() }, true, {
+                            onSelected = function()
+                                applySex(sex, 1, selectedOutfit)
+                            end
+                        })
+                end)
+                RageUI.IsVisible(menus[5], function()
+                    for i = 0, selectedComponentMax do
+                        RageUI.Button(("Type n°~y~%s"):format(i), nil,
+                            {
+                                RightLabel = _RedClient_Utils.menu_label_selectOrSelected(builder.skin
+                                    [selectedComponent] ==
+                                    i)
+                            }, true, {
+                                onSelected = function()
+                                    builder.skin[selectedComponent] = i
+                                end,
+                                onActive = function()
+                                    if (_RedClient_SkinChanger.getCharacter()[selectedComponent] ~= i) then
+                                        _RedClient_SkinChanger.applySkin({ [selectedComponent] = i })
+                                        ClearPedProp(PlayerPedId(), 0)
+                                        ClearPedProp(PlayerPedId(), 1)
+                                    end
+                                end
+                            }, (selectedComponentData.sub ~= nil and menus[6] or nil))
+                    end
+                end)
+                RageUI.IsVisible(menus[6], function()
+                    for i = 0, _RedClient_SkinChanger.getMaxValues()[selectedComponentData.sub] do
+                        RageUI.Button(("Variation n°~y~%s"):format(i), nil,
+                            {
+                                RightLabel = _RedClient_Utils.menu_label_selectOrSelected(builder.skin
+                                    [selectedComponentData.sub] == i)
+                            }, true, {
+                                onSelected = function()
+                                    builder.skin[selectedComponentData.sub] = i
+                                end,
+                                onActive = function()
+                                    if (_RedClient_SkinChanger.getCharacter()[selectedComponentData.sub] ~= i) then
+                                        _RedClient_SkinChanger.applySkin({ [selectedComponentData.sub] = i })
+                                        ClearPedProp(PlayerPedId(), 0)
+                                        ClearPedProp(PlayerPedId(), 1)
+                                    end
+                                end
+                            })
+                    end
+                end)
+                RageUI.IsVisible(menus[7], function()
+                    for outfitId, data in pairs(_ConfigClient.Creator.defaultOutFits) do
+                        RageUI.Button(data.label, nil,
+                            { RightLabel = _RedClient_Utils.menu_label_selectOrSelected(selectedOutfit == outfitId) },
+                            true, {
+                                onSelected = function()
+                                    if (selectedOutfit ~= outfitId) then
+                                        selectedOutfit = outfitId
+                                        builder.outfit = data.values[builder.skin["sex"]]
+                                        _RedClient_SkinChanger.applySkin(data.values[builder.skin["sex"]])
+                                        ClearPedProp(PlayerPedId(), 1)
+                                    end
+                                end
+                            })
+                    end
+                end)
+            end
+            _RedClient_Menu.menuClosed()
+            -- TODO -> Delete menus
+        end)
+    end)
+end)

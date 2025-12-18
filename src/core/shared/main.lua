@@ -60,6 +60,10 @@ _RedLife.onReceive = function(event, handler)
     end)
 end
 
+_RedLife.onReceiveWithoutNetExposed = function(event, handler)
+    AddEventHandler(event, handler)
+end
+
 _RedLife.onReceiveWithoutNet = function(event, handler)
     event = _RedLife.format(event)
     AddEventHandler(event, handler)
