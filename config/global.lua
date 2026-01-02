@@ -15,4 +15,7 @@ _Config = {
     environment = "DEV",
     enableErrorsLog = true,
     enableSqlLog = true,
+
+    genericBlipSize = 1.0,
+    genericSubBlipSize = 0.9,
 }
